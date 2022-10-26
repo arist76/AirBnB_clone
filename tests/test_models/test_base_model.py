@@ -17,14 +17,19 @@ class TestBaseModel(unittest.TestCase):
     Attributes
     ----------
     my_model : BaseModel
-        the base model object to be tested
+        the base model created automatically object to be tested
+
+    my_model : BaseModel
+        the base model deserialized from a valid dict
     """
 
     def setUp(self):
         """
-        Creates the my_model instance attribute
+        Creates the my_model and my_model2 instance attribute
         """
         self.my_model = BaseModel()
+        model_dict = self.my_model.to_dict()
+        self.my_model2 = BaseModel(**model_dict)
 
     def test_init(self):
         """
@@ -34,11 +39,18 @@ class TestBaseModel(unittest.TestCase):
             1 - the id is a valid UUID
             2 - created_at and updated_at are datetime objects
             3 - created_at and updated_at are equal
+            4 - does all of the above for the second model
         """
         self.assertIsInstance(uuid.UUID(self.my_model.id), uuid.UUID)
         self.assertIsInstance(self.my_model.created_at, datetime.datetime)
         self.assertIsInstance(self.my_model.updated_at, datetime.datetime)
         self.assertEqual(self.my_model.created_at, self.my_model.updated_at)
+
+        # tests for my_model2
+        self.assertIsInstance(self.my_model2, BaseModel)
+        self.assertIsInstance(uuid.UUID(self.my_model2.id), uuid.UUID)
+        self.assertIsInstance(self.my_model2.created_at, datetime.datetime)
+        self.assertIsInstance(self.my_model2.updated_at, datetime.datetime)
 
     def test_str(self):
         """

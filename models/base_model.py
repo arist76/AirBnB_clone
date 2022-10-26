@@ -33,11 +33,34 @@ class BaseModel:
         returns deserialized __dict__ with added keys like __class__
     """
 
-    def __init__(self):
-        """ """
-        self.id = str(uuid.uuid4())
-        self.created_at = datetime.datetime.now()
-        self.updated_at = self.created_at
+    def __init__(self, *args, **kwargs):
+        """
+        if kwargs is not empty it serializes kwargs to a Model object
+        else creates new object
+
+        Parameters
+        ---------
+        args
+            not used here
+
+        kwargs
+            dict to serialize
+        """
+        if kwargs:
+            for k in kwargs.keys():
+                v = None
+                if k == "__class__":
+                    continue
+                elif k == "created_at" or k == "updated_at":
+                    v = datetime.datetime.fromisoformat(kwargs[k])
+                else:
+                    v = kwargs[k]
+
+                self.__dict__[k] = v
+        else:
+            self.id = str(uuid.uuid4())
+            self.created_at = datetime.datetime.now()
+            self.updated_at = self.created_at
 
     def __str__(self):
         """

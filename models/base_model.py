@@ -4,6 +4,7 @@ Contains an abstract model
 """
 import datetime
 import uuid
+from .__init__ import storage
 
 
 class BaseModel:
@@ -61,6 +62,7 @@ class BaseModel:
             self.id = str(uuid.uuid4())
             self.created_at = datetime.datetime.now()
             self.updated_at = self.created_at
+            storage.new(self)
 
     def __str__(self):
         """
@@ -76,9 +78,10 @@ class BaseModel:
     def save(self):
         """
         First updates updated_at to datetime.datetime.now()
-        then saves the instance to the database
+        then saves the instance to storage
         """
         self.updated_at = datetime.datetime.now()
+        storage.save()
 
     def to_dict(self):
         """

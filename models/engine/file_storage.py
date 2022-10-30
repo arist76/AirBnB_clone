@@ -37,7 +37,6 @@ class FileStorage:
 
         with open(FileStorage.__file_path, "w") as json_file:
             json.dump(serialized, json_file)
-        self.__objects.clear()
 
     def reload(self):
         try:
@@ -46,7 +45,7 @@ class FileStorage:
 
                 for k, v in loaded_dict.items():
                     cls_name = v["__class__"]
-                    self.new(eval(cls_name, **v))
+                    self.new(eval(cls_name)(**v))
         except FileNotFoundError:
             pass
 
